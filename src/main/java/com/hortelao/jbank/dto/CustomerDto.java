@@ -1,41 +1,35 @@
-package com.hortelao.jbank.model;
+package com.hortelao.jbank.dto;
 
-import jakarta.persistence.*;
-import jdk.jfr.Enabled;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.validation.constraints.*;
 
-@Entity
-public class Customer {
+public class CustomerDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull(message = "First name is mandatory")
+    @NotBlank(message = "First name is mandatory")
+    @Size(min = 3, max = 64)
     private String firstName;
+
+    @NotNull(message = "Last name is mandatory")
+    @NotBlank(message = "Last name is mandatory")
+    @Size(min = 3, max = 64)
     private String lastName;
+
     private String password;
+
+    @Email
+    @NotBlank(message = "Email is mandatory")
     private String email;
+
+    @Pattern(regexp = "^\\+?[0-9]*$", message = "Phone number contains invalid characters")
+    @Size(min = 9, max = 16)
     private String phone;
+
     private String address;
     private String city;
     private String state;
-
-    @OneToMany(
-            // propagate changes on customer entity to account entities
-            cascade = {CascadeType.ALL},
-
-            // make sure to remove accounts if unlinked from customer
-            orphanRemoval = true,
-
-            // user customer foreign key on account table to establish
-            // the many-to-one relationship instead of a join table
-            mappedBy = "customer",
-
-            // fetch accounts from database together with user
-            fetch = FetchType.EAGER
-    )
-    private List<Account> accounts = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -107,13 +101,5 @@ public class Customer {
 
     public void setState(String state) {
         this.state = state;
-    }
-
-    public List<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
     }
 }

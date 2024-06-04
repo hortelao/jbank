@@ -14,9 +14,13 @@ public class AccountController {
         @Autowired
         private AccountService accountService;
 
-        @PostMapping("/create")
-        public ResponseEntity<Account> createAccount(@RequestBody Account account) {
-            return new ResponseEntity<>(accountService.createAccount(account), HttpStatus.CREATED);
+        @GetMapping("/create")
+        public String createAccount() {
+            Account account = new Account();
+
+            System.out.println(account);
+            accountService.createAccount(account);
+            return "Account created";
         }
 
     @GetMapping("/test")
